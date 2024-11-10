@@ -7,6 +7,7 @@ import {
   BarChartOutlined,
   SettingOutlined,
   DashboardOutlined,
+  MessageOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
 
@@ -27,6 +28,9 @@ const DashboardSidebar: React.FC = () => (
       </Menu.Item>
       <Menu.Item key="3" icon={<PieChartOutlined />}>
         <Link href="/dashboard/analytics">Analytics</Link>
+      </Menu.Item>
+      <Menu.Item key="3" icon={<MessageOutlined />}>
+        <Link href="/support">Support</Link>
       </Menu.Item>
       <Menu.Item key="4" icon={<BarChartOutlined />}>
         <Link href="/dashboard/reports">Reports</Link>

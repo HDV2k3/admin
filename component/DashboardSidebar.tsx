@@ -1,8 +1,7 @@
 // components/DashboardSidebar.tsx
-
+"use client";
 import { Layout, Menu } from "antd";
 import {
-  HomeOutlined,
   PieChartOutlined,
   BarChartOutlined,
   SettingOutlined,
@@ -20,23 +19,20 @@ const DashboardSidebar: React.FC = () => (
     style={{ minHeight: "100vh" }}
   >
     <Menu mode="inline" defaultSelectedKeys={["1"]} style={{ height: "100%" }}>
-      <Menu.Item key="1" icon={<HomeOutlined />}>
-        <Link href="/">Home</Link>
-      </Menu.Item>
-      <Menu.Item key="2" icon={<DashboardOutlined />}>
-        <Link href="/dashboard">Dashboard</Link>
+      <Menu.Item key="1" icon={<DashboardOutlined />}>
+        <Link href="/">Dash Board</Link>
       </Menu.Item>
       <Menu.Item key="3" icon={<PieChartOutlined />}>
-        <Link href="/dashboard/analytics">Analytics</Link>
+        <Link href="/analytics">Analytics</Link>
       </Menu.Item>
       <Menu.Item key="3" icon={<MessageOutlined />}>
         <Link href="/support">Support</Link>
       </Menu.Item>
       <Menu.Item key="4" icon={<BarChartOutlined />}>
-        <Link href="/dashboard/reports">Reports</Link>
+        <Link href="/reports">Reports</Link>
       </Menu.Item>
       <Menu.Item key="5" icon={<SettingOutlined />}>
-        <Link href="/dashboard/settings">Settings</Link>
+        <Link href="/settingAdmin">Settings</Link>
       </Menu.Item>
     </Menu>
   </Sider>

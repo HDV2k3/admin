@@ -30,6 +30,12 @@ const RootPage: React.FC = () => {
 
         const userData = response.data.data;
         const userRoles = userData.roles || [];
+        const userId = userData.id;
+        const firstName = userData.firstName;
+        const lastName = userData.lastName;
+        localStorage.setItem("userId", userId);
+        localStorage.setItem("firstName", firstName);
+        localStorage.setItem("lastName", lastName);
         const isAdmin = userRoles.some(
           (role: { name: string }) => role.name === "ADMIN"
         );

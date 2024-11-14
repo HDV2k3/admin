@@ -1,5 +1,5 @@
 // components/DashboardHeader.tsx
-
+"use client";
 import { Layout, Avatar, Dropdown, Menu } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
@@ -12,6 +12,9 @@ const DashboardHeader: React.FC = () => {
   const handleLogout = () => {
     // Xóa token từ localStorage
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("firstName");
+    localStorage.removeItem("lastName");
 
     // Xóa token từ cookie
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

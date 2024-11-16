@@ -1,4 +1,3 @@
-// components/DashboardSidebar.tsx
 "use client";
 import { Layout, Menu } from "antd";
 import {
@@ -7,35 +6,60 @@ import {
   SettingOutlined,
   DashboardOutlined,
   MessageOutlined,
+  HomeOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
 
 const { Sider } = Layout;
 
-const DashboardSidebar: React.FC = () => (
-  <Sider
-    width={200}
-    className="site-layout-background"
-    style={{ minHeight: "100vh" }}
-  >
-    <Menu mode="inline" defaultSelectedKeys={["1"]} style={{ height: "100%" }}>
-      <Menu.Item key="1" icon={<DashboardOutlined />}>
-        <Link href="/">Dash Board</Link>
-      </Menu.Item>
-      <Menu.Item key="3" icon={<PieChartOutlined />}>
-        <Link href="/analytics">Analytics</Link>
-      </Menu.Item>
-      <Menu.Item key="3" icon={<MessageOutlined />}>
-        <Link href="/support">Support</Link>
-      </Menu.Item>
-      <Menu.Item key="4" icon={<BarChartOutlined />}>
-        <Link href="/reports">Reports</Link>
-      </Menu.Item>
-      <Menu.Item key="5" icon={<SettingOutlined />}>
-        <Link href="/settingAdmin">Settings</Link>
-      </Menu.Item>
-    </Menu>
-  </Sider>
-);
+const DashboardSidebar: React.FC = () => {
+  const menuItems = [
+    {
+      key: "1",
+      icon: <DashboardOutlined />,
+      label: <Link href="/">Dash Board</Link>,
+    },
+    {
+      key: "2",
+      icon: <PieChartOutlined />,
+      label: <Link href="/analytics">Analytics</Link>,
+    },
+    {
+      key: "3",
+      icon: <MessageOutlined />,
+      label: <Link href="/support">Support</Link>,
+    },
+    {
+      key: "4",
+      icon: <BarChartOutlined />,
+      label: <Link href="/reports">Reports</Link>,
+    },
+    {
+      key: "5",
+      icon: <SettingOutlined />,
+      label: <Link href="/settingAdmin">Settings</Link>,
+    },
+    {
+      key: "6",
+      icon: <HomeOutlined />,
+      label: <Link href="/managementRoom">Management Room</Link>,
+    },
+  ];
+
+  return (
+    <Sider
+      width={200}
+      className="site-layout-background"
+      style={{ minHeight: "100vh" }}
+    >
+      <Menu
+        mode="inline"
+        defaultSelectedKeys={["1"]}
+        style={{ height: "100%" }}
+        items={menuItems}
+      />
+    </Sider>
+  );
+};
 
 export default DashboardSidebar;

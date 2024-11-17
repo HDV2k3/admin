@@ -1,6 +1,6 @@
 import React from "react";
-import { Form, Input, Button, Switch, UploadFile } from "antd";
-import RoomImageUpload from "./UploadImages";
+import { Form, Input, Button, Switch } from "antd";
+
 import RoomInfoForm from "./RoomInfoEdit";
 import PricingDetailsForm from "./PricingDetails";
 import RoomUtilityForm from "./RoomUtilities";
@@ -10,7 +10,7 @@ interface RoomFormProps {
   onSubmit: (data: RoomFinal) => void;
 }
 
-const RoomForm: React.FC<RoomFormProps> = ({ roomData, onSubmit }) => {
+const NewRoomForm: React.FC<RoomFormProps> = ({ roomData, onSubmit }) => {
   const [form] = Form.useForm();
 
   // Convert utilities from object to array for initialValues
@@ -38,16 +38,6 @@ const RoomForm: React.FC<RoomFormProps> = ({ roomData, onSubmit }) => {
       )
     );
   }
-
-  const handleImagesChange = (images: UploadFile[]) => {
-    form.setFieldsValue({
-      roomImages: images.map((file) => ({
-        name: file.name,
-        urlImagePost: file.url || file.response?.url,
-        type: file.type,
-      })),
-    });
-  };
 
   const handleFinish = (values: RoomFinal) => {
     const submissionValues = { ...values };
@@ -112,7 +102,7 @@ const RoomForm: React.FC<RoomFormProps> = ({ roomData, onSubmit }) => {
     onSubmit(submissionValues);
     console.log("Form values:", submissionValues);
   };
-  console.log("roomData", roomData?.availableFromDate);
+
   return (
     <Form
       form={form}
@@ -161,28 +151,19 @@ const RoomForm: React.FC<RoomFormProps> = ({ roomData, onSubmit }) => {
         />
       </Form.Item>
 
-      {/* Room Images */}
-      <Form.Item>
-        <RoomImageUpload
-          postId={roomData?.id || ""}
-          initialImages={roomData?.roomInfo?.postImages}
-          onChange={handleImagesChange}
-        />
-      </Form.Item>
-
       {/* Availability Switch */}
-      <Form.Item label="Available" valuePropName="checked" name="status">
+      <Form.Item label="status" name="status">
         <Switch />
       </Form.Item>
 
       {/* Submit Button */}
       <Form.Item>
         <Button type="primary" htmlType="submit">
-          Save Changes
+          Save
         </Button>
       </Form.Item>
     </Form>
   );
 };
 
-export default RoomForm;
+export default NewRoomForm;

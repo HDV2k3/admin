@@ -39,7 +39,7 @@ interface PricingDetails {
   basePrice: number;
   electricityCost: number;
   waterCost: number;
-  additionalFees: AdditionalFee [];
+  additionalFees: AdditionalFee[];
 }
 
 interface RoomFinal {
@@ -60,4 +60,6 @@ interface RoomFinal {
   modifiedBy: string;
   fixPrice: number | null;
   created: string;
+  furnitureAvailability?: { key: string; value: boolean }[];
+  amenitiesAvailability?: { key: string; value: boolean }[];
 }

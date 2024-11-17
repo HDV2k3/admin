@@ -1,223 +1,94 @@
+// "use client";
+
+// import { useRouter } from "next/navigation";
+// import axios from "axios";
+// import { notification } from "antd";
+// import NewRoomForm from "../component/NewsRoomPage";
+
+// const EditRoomPage = () => {
+//   const router = useRouter();
+
+//   const token = localStorage.getItem("token");
+
+//   const handleSubmit = async (newsData: RoomFinal) => {
+//     try {
+//       const response = await axios.post(
+//         `http://localhost:8080/marketing/post`,
+//         newsData,
+//         {
+//           headers: { Authorization: `Bearer ${token}` },
+//         }
+//       );
+//       if (response.status === 200) {
+//         notification.success({ message: "Room updated successfully!" });
+//         router.push(`/managementRoom/${response.data.data.id}`); // Chuyển hướng về trang chi tiết phòng
+//       }
+//     } catch (error) {
+//       console.error(error);
+//       notification.error({ message: "Failed to update room." });
+//     }
+//   };
+
+//   return (
+//     <div className="p-6">
+//       <h1>Thêm Mới</h1>
+//       <NewRoomForm onSubmit={handleSubmit} />
+//     </div>
+//   );
+// };
+
+// export default EditRoomPage;
+// NewRoomPage.tsx
 "use client";
-import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Switch, UploadFile, message } from "antd";
-import RoomInfoForm from "../component/RoomInfoEdit";
-import RoomUtilityForm from "../component/RoomUtilities";
-import PricingDetailsForm from "../component/PricingDetails";
-import RoomImageUpload from "../component/UploadImages";
 
-interface RoomFormProps {
-  roomData?: RoomFinal;
-  onSubmit: (data: RoomFinal) => void;
-}
+import React from "react";
+import { useRouter } from "next/navigation";
+import { notification } from "antd";
+import axios from "axios";
+import NewRoomForm from "../component/NewsRoomPage";
 
-const Page: React.FC<RoomFormProps> = ({ roomData, onSubmit }) => {
-  const [form] = Form.useForm();
-  const [pricingDetails, setPricingDetails] = useState(
-    roomData?.pricingDetails || {
-      basePrice: 0,
-      electricityCost: 0,
-      waterCost: 0,
-      additionalFees: [],
-    }
-  );
+const NewRoomPage: React.FC = () => {
+  const router = useRouter();
 
-  useEffect(() => {
-    if (!roomData) {
-      return;
-    }
-    form.setFieldsValue({ ...roomData });
-  }, [roomData, form]);
+  const handleSubmit = async (roomData: RoomFinal) => {
+    const token = localStorage.getItem("token");
 
-  const handleImagesChange = (images: UploadFile[]) => {
-    form.setFieldsValue({
-      roomImages: images.map((file) => ({
-        name: file.name,
-        urlImagePost: file.url || file.response?.url,
-        type: file.type,
-      })),
-    });
-  };
-
-  const handlePricingDetailsChange = (
-    updatedPricingDetails: PricingDetails
-  ) => {
-    setPricingDetails(updatedPricingDetails);
-  };
-
-  const handleRoomInfoChange = (updatedRoomInfo: RoomInfo) => {
-    form.setFieldsValue({ roomInfo: updatedRoomInfo });
-  };
-
-  const handleFinish = async (values: RoomFinal) => {
-    const submissionValues = { ...values };
-    const formatDate = (date: string | null | undefined): string => {
-      if (!date) return "";
-      return new Date(date).toISOString();
-    };
-    submissionValues.id = roomData?.id || "";
-    submissionValues.roomId = roomData?.roomId || "";
-    submissionValues.roomInfo = values.roomInfo ?? {
-      name: roomData?.roomInfo.name || "",
-      description: roomData?.roomInfo.description || "",
-      address: roomData?.roomInfo.address || "",
-      type: roomData?.roomInfo.type || "",
-      style: roomData?.roomInfo.style || "",
-      floor: roomData?.roomInfo.floor || "",
-      width: roomData?.roomInfo.width || 0,
-      height: roomData?.roomInfo.height || 0,
-      totalArea: roomData?.roomInfo.totalArea || 0,
-      capacity: roomData?.roomInfo.capacity || 0,
-      numberOfBedrooms: roomData?.roomInfo.numberOfBedrooms || 0,
-      numberOfBathrooms: roomData?.roomInfo.numberOfBathrooms || 0,
-      availableFromDate: formatDate(roomData?.roomInfo.availableFromDate),
-    };
-    submissionValues.pricingDetails = roomData?.pricingDetails ?? {
-      basePrice: 0,
-      electricityCost: 0,
-      waterCost: 0,
-      additionalFees: [],
-    };
-    submissionValues.availableFromDate = formatDate(
-      roomData?.availableFromDate
-    );
-    submissionValues.status = roomData?.status || "";
-    submissionValues.roomUtility = roomData?.roomUtility ?? {
-      furnitureAvailability: {},
-      amenitiesAvailability: {},
-    };
-
-    // Step 1: Create the post
     try {
-      const response = await fetch(
-        "http://ec2-52-63-184-223.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/create",
+      // Submit the new room details (without images)
+      const response = await axios.post(
+        "http://localhost:8080/marketing/post/create", // Replace with your API endpoint
+        roomData,
         {
-          method: "POST",
-
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(submissionValues),
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to create the post");
+      if (response.status === 200) {
+        const createdRoomId = response.data.data.id; // Get room ID from response
+
+        notification.success({
+          message: "Room created successfully!",
+        });
+
+        // Redirect to the image upload page for the newly created room
+        router.push(`/managementRoom/${createdRoomId}/upload-images`);
       }
-
-      const postData = await response.json();
-      const postId = postData.id;
-
-      // Step 2: Upload images (if any)
-      const roomImages = form.getFieldValue("postImages") || [];
-      const formData = new FormData();
-      formData.append("id", postId);
-      roomImages.forEach((image: UploadFile) => {
-        if (image.originFileObj) {
-          formData.append("files", image.originFileObj);
-        }
+    } catch (error) {
+      console.error("Room creation failed:", error);
+      notification.error({
+        message: "Failed to create room.",
       });
-      const imageUploadResponse = await fetch(
-        `http://ec2-52-63-184-223.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/upload-images`,
-        {
-          method: "POST",
-          body: formData,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (!imageUploadResponse.ok) {
-        throw new Error("Failed to upload images");
-      }
-
-      // Step 3: Return the final data to parent
-      message.success("Post and images uploaded successfully");
-      onSubmit({ ...submissionValues, id: postId });
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        message.error("Error occurred: " + error.message);
-      } else {
-        message.error("An unknown error occurred");
-      }
     }
-    console.log("Form values:", values);
   };
 
   return (
-    <>
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleFinish}
-        initialValues={roomData || {}}
-      >
-        {/* Title */}
-        <Form.Item label="Title" name="title">
-          <Input placeholder={roomData?.title || "Enter room title"} />
-        </Form.Item>
-
-        {/* Description */}
-        <Form.Item label="Description" name="description">
-          <Input.TextArea
-            placeholder={roomData?.description || "Enter room description"}
-          />
-        </Form.Item>
-
-        {/* Room Info - Using RoomInfoForm */}
-        <RoomInfoForm
-          roomInfo={roomData?.roomInfo}
-          onChange={handleRoomInfoChange}
-        />
-
-        {/* Room Utility */}
-        <RoomUtilityForm roomUtility={roomData?.roomUtility} />
-
-        {/* Pricing Details */}
-        <PricingDetailsForm
-          pricingDetails={pricingDetails}
-          onPricingDetailsChange={handlePricingDetailsChange}
-        />
-
-        {/* Contact Info */}
-        <Form.Item label="Contact Info" name="contactInfo">
-          <Input
-            placeholder={
-              roomData?.contactInfo || "Enter contact info (e.g., phone number)"
-            }
-          />
-        </Form.Item>
-
-        {/* Additional Details */}
-        <Form.Item label="Additional Details" name="additionalDetails">
-          <Input.TextArea
-            placeholder={roomData?.additionalDetails || "Enter any details"}
-          />
-        </Form.Item>
-
-        {/* Availability Switch */}
-        <Form.Item label="Available" valuePropName="checked" name="status">
-          <Switch />
-        </Form.Item>
-        {/* Room Images */}
-        <Form.Item>
-          <RoomImageUpload
-            postId={roomData?.id || ""}
-            initialImages={roomData?.roomInfo?.postImages}
-            onChange={handleImagesChange}
-          />
-        </Form.Item>
-        {/* Submit Button */}
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Save
-          </Button>
-        </Form.Item>
-      </Form>
-    </>
+    <div className="p-6">
+      <h1>Create New Room</h1>
+      <NewRoomForm onSubmit={handleSubmit} />
+    </div>
   );
 };
 
-export default Page;
+export default NewRoomPage;

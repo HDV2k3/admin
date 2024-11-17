@@ -35,7 +35,7 @@ const EditRoomPage = () => {
   const handleSubmit = async (updatedRoomData: RoomFinal) => {
     try {
       const response = await axios.put(
-        `http://ec2-52-63-184-223.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/${id}`,
+        `http://localhost:8080/marketing/post/${id}`,
         updatedRoomData,
         {
           headers: { Authorization: `Bearer ${token}` },

@@ -1,10 +1,13 @@
 import React from "react";
-import { Form, Input, Button, Switch } from "antd";
+import { Form, Input, Button, Select, ConfigProvider, DatePicker } from "antd";
+import RoomInfoForm from "../../component/RoomInfoEdit";
+import PricingDetailsForm from "../../component/PricingDetails";
+import RoomUtilityForm from "../../component/RoomUtilities";
+import dayjs from "dayjs";
 
-import RoomInfoForm from "./RoomInfoEdit";
-import PricingDetailsForm from "./PricingDetails";
-import RoomUtilityForm from "./RoomUtilities";
-
+import type { DatePickerProps } from "antd";
+import en from "antd/es/date-picker/locale/en_US";
+import enUS from "antd/es/locale/en_US";
 interface RoomFormProps {
   roomData?: RoomFinal;
   onSubmit: (data: RoomFinal) => void;
@@ -16,7 +19,11 @@ const NewRoomForm: React.FC<RoomFormProps> = ({ roomData, onSubmit }) => {
   // Convert utilities from object to array for initialValues
   const furnitures = [];
   const amenities = [];
-
+  const statusOptions = [
+    { label: "ACTIVE", value: "active" },
+    { label: "UNACTIVE", value: "unactive" },
+    { label: "PENDING", value: "pending" },
+  ];
   if (roomData?.roomUtility.furnitureAvailability) {
     furnitures.push(
       ...Object.entries(roomData?.roomUtility.furnitureAvailability).map(
@@ -42,13 +49,6 @@ const NewRoomForm: React.FC<RoomFormProps> = ({ roomData, onSubmit }) => {
   const handleFinish = (values: RoomFinal) => {
     const submissionValues = { ...values };
 
-    const formatDate = (date: string | null | undefined): string => {
-      if (!date) return "";
-      return new Date(date).toISOString();
-    };
-
-    submissionValues.id = roomData?.id || "";
-    submissionValues.roomId = roomData?.roomId || "";
     submissionValues.roomInfo = values.roomInfo ?? {
       name: roomData?.roomInfo.name || "",
       description: roomData?.roomInfo.description || "",
@@ -62,14 +62,18 @@ const NewRoomForm: React.FC<RoomFormProps> = ({ roomData, onSubmit }) => {
       capacity: roomData?.roomInfo.capacity || 0,
       numberOfBedrooms: roomData?.roomInfo.numberOfBedrooms || 0,
       numberOfBathrooms: roomData?.roomInfo.numberOfBathrooms || 0,
-      availableFromDate: formatDate(roomData?.roomInfo.availableFromDate),
     };
 
-    submissionValues.availableFromDate = formatDate(
-      roomData?.availableFromDate
-    );
-    submissionValues.status = roomData?.status || "";
+    if (values.roomInfo?.availableFromDate) {
+      submissionValues.roomInfo.availableFromDate = dayjs(
+        values.roomInfo.availableFromDate
+      ).toISOString(); // ISO 8601 format
+    }
 
+    submissionValues.availableFromDate = dayjs(
+      values.availableFromDate
+    ).toISOString(); // ISO 8601 format
+    submissionValues.status = values.status || roomData?.status || "available";
     // Convert additionalFees array to object structure
     if (values.pricingDetails?.additionalFees) {
       submissionValues.pricingDetails.additionalFees =
@@ -102,7 +106,28 @@ const NewRoomForm: React.FC<RoomFormProps> = ({ roomData, onSubmit }) => {
     onSubmit(submissionValues);
     console.log("Form values:", submissionValues);
   };
+  const buddhistLocale: typeof en = {
+    ...en,
+    lang: {
+      ...en.lang,
+      dateFormat: "BBBB-MM-DD",
+      dateTimeFormat: "BBBB-MM-DD HH:mm:ss",
+      yearFormat: "BBBB",
+      cellYearFormat: "BBBB",
+    },
+  };
 
+  // ConfigProvider-level locale
+  const globalBuddhistLocale: typeof enUS = {
+    ...enUS,
+    DatePicker: {
+      ...enUS.DatePicker!,
+      lang: buddhistLocale.lang,
+    },
+  };
+  const handleDateChange: DatePickerProps["onChange"] = (_, dateStr) => {
+    console.log("onChange:", dateStr);
+  };
   return (
     <Form
       form={form}
@@ -151,9 +176,33 @@ const NewRoomForm: React.FC<RoomFormProps> = ({ roomData, onSubmit }) => {
         />
       </Form.Item>
 
-      {/* Availability Switch */}
-      <Form.Item label="status" name="status">
-        <Switch />
+      {/* availableFromDate*/}
+      <ConfigProvider locale={globalBuddhistLocale}>
+        <Form.Item
+          label="Available From Date"
+          name={["roomInfo", "availableFromDate"]}
+        >
+          <DatePicker
+            placeholder={"Select available from date"}
+            style={{ width: "100%" }}
+            locale={buddhistLocale}
+            onChange={handleDateChange}
+            format="BBBB-MM-DD"
+            defaultValue={dayjs()}
+          />
+        </Form.Item>
+      </ConfigProvider>
+      {/* Status Select */}
+      <Form.Item
+        label="Status"
+        name="status"
+        rules={[{ required: true, message: "Please select a status" }]}
+      >
+        <Select
+          placeholder="Select room status"
+          options={statusOptions} // Use the predefined options for status
+          style={{ width: "100%" }}
+        />
       </Form.Item>
 
       {/* Submit Button */}

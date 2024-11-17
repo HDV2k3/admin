@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { Spin, notification } from "antd";
-import RoomForm from "../../component/EditRoomPage";
+import RoomForm from "./component/EditRoomPage";
 
 const EditRoomPage = () => {
   const { id } = useParams();

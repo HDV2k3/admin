@@ -1,5 +1,20 @@
 import React from "react";
-import { Form, Input, InputNumber, Row, Col } from "antd";
+import {
+  Form,
+  Input,
+  InputNumber,
+  Row,
+  Col,
+  DatePicker,
+  ConfigProvider,
+} from "antd";
+import dayjs from "dayjs";
+import buddhistEra from "dayjs/plugin/buddhistEra";
+import type { DatePickerProps } from "antd";
+import en from "antd/es/date-picker/locale/en_US";
+import enUS from "antd/es/locale/en_US";
+
+dayjs.extend(buddhistEra);
 
 interface roomInfo {
   name: string;
@@ -21,8 +36,37 @@ interface roomInfoFormProps {
   roomInfo?: roomInfo;
 }
 
-const RoomInfoForm: React.FC<roomInfoFormProps> = ({}) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// Component-level locale for DatePicker
+const buddhistLocale: typeof en = {
+  ...en,
+  lang: {
+    ...en.lang,
+    dateFormat: "BBBB-MM-DD",
+    dateTimeFormat: "BBBB-MM-DD HH:mm:ss",
+    yearFormat: "BBBB",
+    cellYearFormat: "BBBB",
+  },
+};
+
+// ConfigProvider-level locale
+const globalBuddhistLocale: typeof enUS = {
+  ...enUS,
+  DatePicker: {
+    ...enUS.DatePicker!,
+    lang: buddhistLocale.lang,
+  },
+};
+
+const RoomInfoForm: React.FC<roomInfoFormProps> = ({ roomInfo }) => {
+  // Convert availableFromDate to dayjs Buddhist Era format
+  const availableFromDate = roomInfo?.availableFromDate
+    ? dayjs(roomInfo.availableFromDate).format("BBBB-MM-DD") // Format date to Buddhist Era
+    : null;
+
+  const handleDateChange: DatePickerProps["onChange"] = (_, dateStr) => {
+    console.log("onChange:", dateStr);
+  };
+
   return (
     <>
       <Form.Item
@@ -125,10 +169,22 @@ const RoomInfoForm: React.FC<roomInfoFormProps> = ({}) => {
           </Form.Item>
         </Col>
       </Row>
-
-      {/* <Form.Item label="DatePicker" name={["roomInfo", "availableFromDate"]}>
-        <DatePicker />
-      </Form.Item> */}
+      <ConfigProvider locale={globalBuddhistLocale}>
+        <Form.Item
+          label="Available From Date"
+          name={["roomInfo", "availableFromDate"]}
+        >
+          <DatePicker
+            placeholder={"Select available from date"}
+            style={{ width: "100%" }}
+            locale={buddhistLocale}
+            defaultValue={
+              availableFromDate ? dayjs(availableFromDate, "BBBB-MM-DD") : null
+            }
+            onChange={handleDateChange}
+          />
+        </Form.Item>
+      </ConfigProvider>
     </>
   );
 };

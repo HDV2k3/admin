@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import IssueTracker from "./component/table";
+import IssueTracker from "./component/IssueTracker";
 
 const Report: React.FC = () => {
   return (

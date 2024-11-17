@@ -1,4 +1,3 @@
-// components/DashboardHeader.tsx
 "use client";
 import { Layout, Avatar, Dropdown, Menu } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
@@ -9,6 +8,7 @@ const { Header } = Layout;
 
 const DashboardHeader: React.FC = () => {
   const router = useRouter();
+
   const handleLogout = () => {
     // Xóa token từ localStorage
     localStorage.removeItem("token");
@@ -24,14 +24,17 @@ const DashboardHeader: React.FC = () => {
   };
 
   const menu = (
-    <Menu>
-      <Menu.Item key="1" icon={<UserOutlined />}>
-        Profile
-      </Menu.Item>
-      <Menu.Item key="2" icon={<LogoutOutlined />} onClick={handleLogout}>
-        Logout
-      </Menu.Item>
-    </Menu>
+    <Menu
+      items={[
+        { key: "1", icon: <UserOutlined />, label: "Profile" },
+        {
+          key: "2",
+          icon: <LogoutOutlined />,
+          label: "Logout",
+          onClick: handleLogout,
+        },
+      ]}
+    />
   );
 
   return (

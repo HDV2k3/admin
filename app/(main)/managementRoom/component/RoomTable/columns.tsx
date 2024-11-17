@@ -1,3 +1,4 @@
+"use client";
 import { ColumnsType } from "antd/es/table";
 
 import { Space, Button, Dropdown, Menu } from "antd";

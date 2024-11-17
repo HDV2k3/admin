@@ -14,7 +14,7 @@ import {
 } from "recharts";
 import { Download, TrendingUp, Users, Home, DollarSign } from "lucide-react";
 import { Button, Select, DatePicker, Card, Col, Row, Table } from "antd";
-import { isValid } from "date-fns";
+
 import dayjs from "dayjs";
 import {
   AgentPerformance,
@@ -67,7 +67,7 @@ const ReportPage: React.FC = () => {
   );
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
-
+  const isValid = (date: Date) => !isNaN(date.getTime());
   // Sample data - replace with real data
   const revenueData: RevenueData[] = [
     {

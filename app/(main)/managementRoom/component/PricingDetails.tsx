@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { InputNumber, Input, Button, Form, Space } from "antd";
 import { CloseOutlined } from "@ant-design/icons";

@@ -1,13 +1,9 @@
-"use client";
-import React from "react";
-import IssueTracker from "./component/IssueTracker";
+import dynamic from "next/dynamic";
 
-const Report: React.FC = () => {
-  return (
-    <div>
-      <IssueTracker />
-    </div>
-  );
-};
+const IssueTracker = dynamic(() => import("./component/IssueTracker"), {
+  ssr: false,
+});
 
-export default Report;
+export default function Page() {
+  return <IssueTracker />;
+}

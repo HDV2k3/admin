@@ -1,4 +1,6 @@
+"use client";
 import React from "react";
+
 import { Input, Select, DatePicker, Button } from "antd";
 const { RangePicker } = DatePicker;
 

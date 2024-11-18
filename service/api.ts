@@ -9,3 +9,7 @@ export const api = axios.create({
     Authorization: `Bearer ${localStorage.getItem("token")}`,
   },
 });
+export const apiNonToken = axios.create({
+  baseURL: BASE_URL,
+  
+});

@@ -102,5 +102,35 @@ export const notificationService = {
         );
       },
     },
+    featured: {
+      addSuccess: (roomName: string) => {
+        notificationService.show(
+          "success",
+          "Thêm phòng nổi bật thành công",
+          `${roomName} đã được thêm vào danh sách nổi bật.`
+        );
+      },
+      addError: () => {
+        notificationService.show(
+          "error",
+          "Thêm phòng nổi bật thất bại",
+          "Không thể thêm phòng vào danh sách nổi bật."
+        );
+      },
+      removeSuccess: (roomName: string) => {
+        notificationService.show(
+          "success",
+          "Xóa phòng nổi bật thành công",
+          `${roomName} đã được xóa khỏi danh sách nổi bật.`
+        );
+      },
+      removeError: () => {
+        notificationService.show(
+          "error",
+          "Xóa phòng nổi bật thất bại",
+          "Không thể xóa phòng khỏi danh sách nổi bật."
+        );
+      },
+    },
   },
 };

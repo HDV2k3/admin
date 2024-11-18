@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
-import { Spin, Card, Col, Row, Tag, Button } from "antd";
+import { Spin, Card, Col, Row, Tag, Button, Divider } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import Image from "next/image";
 
@@ -46,7 +46,7 @@ const RoomDetailPage = () => {
   }
 
   if (!roomData) {
-    return <div>Room not found</div>;
+    return <div className="text-center py-12">Room not found</div>;
   }
 
   return (
@@ -60,27 +60,36 @@ const RoomDetailPage = () => {
         Back to Rooms List
       </Button>
 
-      <Card title={roomData.title} bordered={false}>
+      <Card title={roomData.title} bordered={false} className="shadow-lg">
         <Row gutter={24}>
           <Col span={16}>
-            {/* Room Image */}
-            <div className="mb-6">
-              <Image
-                src={roomData.roomInfo.postImages?.[0].urlImagePost || ""}
-                alt={roomData.title}
-                width={800}
-                height={400}
-                objectFit="cover"
-              />
+            {/* Room Images */}
+            <div className="mb-8">
+              <h3 className="text-2xl font-semibold mb-4">Room Images</h3>
+              <div className="grid grid-cols-2 gap-4">
+                {roomData.roomInfo.postImages?.map((image, index) => (
+                  <Image
+                    key={index}
+                    src={image.urlImagePost}
+                    alt={roomData.title}
+                    width={400}
+                    height={300}
+                    objectFit="cover"
+                    className="rounded-lg shadow-md"
+                  />
+                ))}
+              </div>
             </div>
 
             {/* Room Description */}
-            <h3 className="text-xl font-semibold">Description</h3>
-            <p>{roomData.description}</p>
+            <h3 className="text-2xl font-semibold mt-6">Description</h3>
+            <p className="text-gray-700 leading-relaxed">
+              {roomData.description}
+            </p>
 
             {/* Room Info */}
-            <h3 className="text-xl font-semibold mt-6">Room Information</h3>
-            <ul>
+            <h3 className="text-2xl font-semibold mt-6">Room Information</h3>
+            <ul className="space-y-2 text-gray-700">
               <li>
                 <strong>Name:</strong> {roomData.roomInfo.name}
               </li>
@@ -111,62 +120,38 @@ const RoomDetailPage = () => {
               </li>
             </ul>
 
+            <Divider />
+
             {/* Room Utilities */}
-            <h3 className="text-xl font-semibold mt-6">Utilities</h3>
-            <ul>
-              <li>
-                <strong>Bed:</strong>{" "}
-                {roomData.roomUtility.furnitureAvailability.Bed
-                  ? "Available"
-                  : "Not Available"}
-              </li>
-              <li>
-                <strong>Sofa:</strong>{" "}
-                {roomData.roomUtility.furnitureAvailability.Sofa
-                  ? "Available"
-                  : "Not Available"}
-              </li>
-              <li>
-                <strong>Table:</strong>{" "}
-                {roomData.roomUtility.furnitureAvailability.Table
-                  ? "Available"
-                  : "Not Available"}
-              </li>
-              <li>
-                <strong>Chair:</strong>{" "}
-                {roomData.roomUtility.furnitureAvailability.Chair
-                  ? "Available"
-                  : "Not Available"}
-              </li>
-              <li>
-                <strong>WiFi:</strong>{" "}
-                {roomData.roomUtility.amenitiesAvailability.WiFi
-                  ? "Available"
-                  : "Not Available"}
-              </li>
-              <li>
-                <strong>Air Conditioner:</strong>{" "}
-                {roomData.roomUtility.amenitiesAvailability.AirConditioner
-                  ? "Available"
-                  : "Not Available"}
-              </li>
-              <li>
-                <strong>Heater:</strong>{" "}
-                {roomData.roomUtility.amenitiesAvailability.Heater
-                  ? "Available"
-                  : "Not Available"}
-              </li>
-              <li>
-                <strong>Washing Machine:</strong>{" "}
-                {roomData.roomUtility.amenitiesAvailability.WashingMachine
-                  ? "Available"
-                  : "Not Available"}
-              </li>
+            <h3 className="text-2xl font-semibold mt-6">Utilities</h3>
+            <ul className="space-y-2 text-gray-700">
+              {Object.entries(roomData.roomUtility.furnitureAvailability).map(
+                ([key, value]) => (
+                  <li key={key}>
+                    <strong>
+                      {key.charAt(0).toUpperCase() + key.slice(1)}:
+                    </strong>{" "}
+                    {value ? "Available" : "Not Available"}
+                  </li>
+                )
+              )}
+              {Object.entries(roomData.roomUtility.amenitiesAvailability).map(
+                ([key, value]) => (
+                  <li key={key}>
+                    <strong>
+                      {key.charAt(0).toUpperCase() + key.slice(1)}:
+                    </strong>{" "}
+                    {value ? "Available" : "Not Available"}
+                  </li>
+                )
+              )}
             </ul>
 
+            <Divider />
+
             {/* Pricing Details */}
-            <h3 className="text-xl font-semibold mt-6">Pricing Details</h3>
-            <ul>
+            <h3 className="text-2xl font-semibold mt-6">Pricing Details</h3>
+            <ul className="space-y-2 text-gray-700">
               <li>
                 <strong>Base Price:</strong> $
                 {roomData.pricingDetails.basePrice}
@@ -186,13 +171,17 @@ const RoomDetailPage = () => {
               ))}
             </ul>
 
+            <Divider />
+
             {/* Additional Details */}
-            <h3 className="text-xl font-semibold mt-6">Additional Details</h3>
-            <p>{roomData.additionalDetails}</p>
+            <h3 className="text-2xl font-semibold mt-6">Additional Details</h3>
+            <p className="text-gray-700">{roomData.additionalDetails}</p>
+
+            <Divider />
 
             {/* Contact Info */}
-            <h3 className="text-xl font-semibold mt-6">Contact Info</h3>
-            <p>{roomData.contactInfo}</p>
+            <h3 className="text-2xl font-semibold mt-6">Contact Info</h3>
+            <p className="text-gray-700">{roomData.contactInfo}</p>
           </Col>
           <Col span={8}>
             {/* Status */}
@@ -201,6 +190,10 @@ const RoomDetailPage = () => {
                 {roomData.status}
               </Tag>
             </div>
+            {/* Contact Section */}
+            <Button type="primary" block size="large" className="mt-6">
+              Contact Owner
+            </Button>
           </Col>
         </Row>
       </Card>

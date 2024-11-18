@@ -1,5 +1,5 @@
 // components/DashboardContent.tsx
-
+"use client";
 import React from "react";
 import {
   PieChart,

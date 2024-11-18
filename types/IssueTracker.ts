@@ -9,4 +9,5 @@ export interface Room {
     image?: string;
     basePrice: number;
     fixPrice?: number;
+    isFeatured: boolean;
   }

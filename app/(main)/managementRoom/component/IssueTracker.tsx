@@ -98,7 +98,7 @@ const IssueTracker: React.FC = () => {
   const fetchRoomData = async (page: number = 1) => {
     try {
       const response = await axios.get(
-        `http://ec2-52-63-184-223.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/all`,
+        `http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/all`,
         { params: { page, size } }
       );
       const responseData = response.data;

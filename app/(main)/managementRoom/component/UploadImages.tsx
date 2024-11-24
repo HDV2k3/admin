@@ -87,7 +87,7 @@ const RoomImageUpload: React.FC<RoomImageUploadProps> = ({
       const token = localStorage.getItem("token");
       console.log(formData);
       const response = await axios.post(
-        `http://ec2-52-63-184-223.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/upload-images`,
+        `http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/upload-images`,
         formData,
         {
           headers: {

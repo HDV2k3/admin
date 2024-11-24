@@ -15,7 +15,7 @@ const NewRoomPage: React.FC = () => {
     try {
       // Submit the new room details (without images)
       const response = await axios.post(
-        "http://localhost:8080/marketing/post/create", // Replace with your API endpoint
+        "http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/create", // Replace with your API endpoint
         roomData,
         {
           headers: {

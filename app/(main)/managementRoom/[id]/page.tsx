@@ -20,7 +20,7 @@ const RoomDetailPage = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://ec2-52-63-184-223.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/post-by-id/${PostId}`
+          `http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/post-by-id/${PostId}`
         );
         if (response.data.responseCode === 101000) {
           setRoomData(response.data.data);

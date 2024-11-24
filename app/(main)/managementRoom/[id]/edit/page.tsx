@@ -17,7 +17,7 @@ const EditRoomPage = () => {
     const fetchRoomData = async () => {
       try {
         const response = await axios.get(
-          `http://ec2-52-63-184-223.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/post-by-id/${id}`
+          `http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/post-by-id/${id}`
         );
         setRoomData(response.data.data);
         setLoading(false);
@@ -35,7 +35,7 @@ const EditRoomPage = () => {
   const handleSubmit = async (updatedRoomData: RoomFinal) => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/marketing/post/${id}`,
+        `http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/${id}`,
         updatedRoomData,
         {
           headers: { Authorization: `Bearer ${token}` },

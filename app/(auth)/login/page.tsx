@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "http://user-cicd-env.eba-wjfksigh.ap-southeast-2.elasticbeanstalk.com/user/auth/login",
+        "http://ec2-3-106-252-213.ap-southeast-2.compute.amazonaws.com:8080/user/auth/login",
         {
           email,
           password,

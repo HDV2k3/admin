@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const BASE_URL =
-  "http://ec2-52-63-184-223.ap-southeast-2.compute.amazonaws.com:8080";
+  "http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080";
 
 export const api = axios.create({
   baseURL: BASE_URL,
@@ -11,5 +11,4 @@ export const api = axios.create({
 });
 export const apiNonToken = axios.create({
   baseURL: BASE_URL,
-  
 });

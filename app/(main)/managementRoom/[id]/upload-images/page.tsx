@@ -18,7 +18,7 @@ const UploadImagesPage: React.FC = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `http://localhost:8080/marketing/post/${roomId}/images`,
+          `http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/${roomId}/images`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

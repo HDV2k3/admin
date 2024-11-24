@@ -1,95 +1,85 @@
+// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import axios from "axios";
 
-// Định nghĩa các route cần bảo vệ và route công khai
-const protectedRoutes = ["/", "/home", "/dashboard"];
-const publicRoutes = ["/login", "/unauthorized", "/register"];
+// Define protected routes with role requirements
+const protectedRoutes = {
+  admin: ["/", "/home", "/dashboard"],
+  user: ["/user-dashboard", "/profile"],
+  public: ["/login", "/unauthorized", "/register"],
+};
+
 const API_URL =
   "http://ec2-3-106-252-213.ap-southeast-2.compute.amazonaws.com:8080";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Bỏ qua các static files và API routes
+  // Skip middleware for static files and API routes
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
     pathname.includes("/assets") ||
-    pathname.includes(".") // images, favicon, etc
+    pathname.includes(".")
   ) {
     return NextResponse.next();
   }
 
-  // Lấy token từ cookies
   const token = request.cookies.get("token")?.value;
 
-  console.log("Current path:", pathname);
-  console.log("Token exists:", !!token);
-
-  // Xử lý public routes
-  if (publicRoutes.includes(pathname)) {
-    // Nếu đã có token và đang ở trang login, chuyển về home
+  // Handle public routes
+  if (protectedRoutes.public.includes(pathname)) {
     if (token && pathname === "/login") {
       return NextResponse.redirect(new URL("/home", request.url));
     }
     return NextResponse.next();
   }
 
-  // Nếu không có token và đang ở protected route, chuyển về login
-  if (
-    !token &&
-    (protectedRoutes.includes(pathname) || pathname.startsWith("/protected"))
-  ) {
-    console.log("No token, redirecting to login");
+  // Redirect to login if no token on protected routes
+  if (!token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Nếu có token, xác thực token
-  if (token) {
-    try {
-      const response = await axios.get(`${API_URL}/user/users/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  // Verify token and check roles
+  try {
+    const response = await axios.get(`${API_URL}/user/users/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-      const userData = response.data;
-      const userRoles = userData?.data?.roles || [];
-      const isAdmin = userRoles.some(
-        (role: { name: string }) => role.name === "ADMIN"
-      );
+    const userData = response.data;
+    const userRoles = userData?.data?.roles || [];
+    const isAdmin = userRoles.some(
+      (role: { name: string }) => role.name === "ADMIN"
+    );
 
-      // Nếu không phải admin và đang truy cập protected route
-      if (!isAdmin && protectedRoutes.includes(pathname)) {
-        console.log("Not admin, redirecting to unauthorized");
-        return NextResponse.redirect(new URL("/unauthorized", request.url));
-      }
+    // Check if current path requires admin role
+    const requiresAdmin = protectedRoutes.admin.includes(pathname);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const requiresUser = protectedRoutes.user.includes(pathname);
 
-      return NextResponse.next();
-    } catch (error) {
-      console.error("Auth error:", error);
-      // Xóa token không hợp lệ và chuyển về login
-      const response = NextResponse.redirect(new URL("/login", request.url));
-      response.cookies.delete("token");
-      return response;
+    if (requiresAdmin && !isAdmin) {
+      console.log("Access denied: Admin role required");
+      return NextResponse.redirect(new URL("/unauthorized", request.url));
     }
-  }
 
-  // Mặc định chuyển về login nếu không match các điều kiện trên
-  return NextResponse.redirect(new URL("/login", request.url));
+    // Allow access if user has appropriate role
+    if (!requiresAdmin || (requiresAdmin && isAdmin)) {
+      return NextResponse.next();
+    }
+
+    // Default to unauthorized if no conditions are met
+    return NextResponse.redirect(new URL("/unauthorized", request.url));
+  } catch (error) {
+    console.error("Auth error:", error);
+    const response = NextResponse.redirect(new URL("/login", request.url));
+    response.cookies.delete("token");
+    return response;
+  }
 }
 
-// Cấu hình middleware để chạy trên mọi route
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except:
-     * 1. /api routes
-     * 2. /_next (Next.js internals)
-     * 3. /assets
-     * 4. all root files inside public (e.g. /favicon.ico)
-     */
-    "/((?!api|_next|assets|[\\w-]+\\.\\w+).*)",
-  ],
+  matcher: ["/((?!api|_next|assets|[\\w-]+\\.\\w+).*)"],
 };

@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import axios from "axios";
+import { API_IDENTITY } from "./service/constant";
 
 // Define protected routes with role requirements
 const protectedRoutes = {
@@ -9,9 +10,6 @@ const protectedRoutes = {
   user: ["/user-dashboard", "/profile"],
   public: ["/login", "/unauthorized", "/register"],
 };
-
-const API_URL =
-  "http://ec2-3-106-252-213.ap-southeast-2.compute.amazonaws.com:8080";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -43,7 +41,7 @@ export async function middleware(request: NextRequest) {
 
   // Verify token and check roles
   try {
-    const response = await axios.get(`${API_URL}/user/users/me`, {
+    const response = await axios.get(`${API_IDENTITY}/users/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

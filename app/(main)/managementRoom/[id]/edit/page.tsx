@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { Spin, notification } from "antd";
 import RoomForm from "./component/EditRoomPage";
+import { API_MARKETING } from "@/service/constant";
 
 const EditRoomPage = () => {
   const { id } = useParams();
@@ -17,7 +18,7 @@ const EditRoomPage = () => {
     const fetchRoomData = async () => {
       try {
         const response = await axios.get(
-          `http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/post-by-id/${id}`
+          `${API_MARKETING}/post/post-by-id/${id}`
         );
         setRoomData(response.data.data);
         setLoading(false);
@@ -35,7 +36,7 @@ const EditRoomPage = () => {
   const handleSubmit = async (updatedRoomData: RoomFinal) => {
     try {
       const response = await axios.put(
-        `http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/${id}`,
+        `${API_MARKETING}/post/${id}`,
         updatedRoomData,
         {
           headers: { Authorization: `Bearer ${token}` },

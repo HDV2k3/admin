@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { notification } from "antd";
 import axios from "axios";
 import NewRoomForm from "./component/NewsRoomPage";
+import { API_MARKETING } from "@/service/constant";
 
 const NewRoomPage: React.FC = () => {
   const router = useRouter();
@@ -15,7 +16,7 @@ const NewRoomPage: React.FC = () => {
     try {
       // Submit the new room details (without images)
       const response = await axios.post(
-        "http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/create", // Replace with your API endpoint
+        `${API_MARKETING}/post/create`, // Replace with your API endpoint
         roomData,
         {
           headers: {

@@ -6,6 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import { notification, UploadFile } from "antd";
 import axios from "axios";
 import RoomImageUpload from "../../component/UploadImages";
+import { API_MARKETING } from "@/service/constant";
 
 const UploadImagesPage: React.FC = () => {
   const { id: roomId } = useParams();
@@ -18,7 +19,7 @@ const UploadImagesPage: React.FC = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/${roomId}/images`,
+          `${API_MARKETING}/post/${roomId}/images`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

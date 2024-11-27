@@ -1,6 +1,7 @@
 // app/api/auth/check/route.ts
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { API_IDENTITY } from "@/service/constant";
 
 export async function GET() {
   try {
@@ -15,7 +16,7 @@ export async function GET() {
     }
 
     const response = await fetch(
-      "http://ec2-3-106-252-213.ap-southeast-2.compute.amazonaws.com:8080/user/users/me",
+      `${API_IDENTITY}/users/me`,
       {
         headers: {
           Authorization: `Bearer ${token.value}`,

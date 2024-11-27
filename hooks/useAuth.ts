@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter, usePathname } from "next/navigation";
+import { API_IDENTITY } from "@/service/constant";
 
 interface UserData {
   data: {
@@ -33,7 +34,7 @@ export function useAuth() {
 
         // Kiểm tra vai trò người dùng
         const response = await axios.get<UserData>(
-          "http://user-cicd-env.eba-wjfksigh.ap-southeast-2.elasticbeanstalk.com/user/users/me",
+          `${API_IDENTITY}/users/me`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

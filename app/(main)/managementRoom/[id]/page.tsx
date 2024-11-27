@@ -5,6 +5,7 @@ import axios from "axios";
 import { Spin, Card, Col, Row, Tag, Button, Divider } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import Image from "next/image";
+import { API_MARKETING } from "@/service/constant";
 
 const RoomDetailPage = () => {
   const [roomData, setRoomData] = useState<RoomFinal | null>(null);
@@ -20,7 +21,7 @@ const RoomDetailPage = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/post-by-id/${PostId}`
+          `${API_MARKETING}/post/post-by-id/${PostId}`
         );
         if (response.data.responseCode === 101000) {
           setRoomData(response.data.data);

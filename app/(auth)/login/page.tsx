@@ -1,4 +1,5 @@
 "use client";
+import { API_IDENTITY } from "@/service/constant";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -18,13 +19,10 @@ const LoginPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://ec2-3-106-252-213.ap-southeast-2.compute.amazonaws.com:8080/user/auth/login",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axios.post(`${API_IDENTITY}/auth/login`, {
+        email,
+        password,
+      });
 
       if (response.data && response.data.data.token) {
         localStorage.setItem("token", response.data.data.token); // Save token in localStorage

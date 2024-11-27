@@ -9,6 +9,7 @@ import { PriceModal } from "./PriceModal/PriceModal";
 import { RoomTable } from "./RoomTable/RoomTable";
 import axios from "axios";
 import { notificationService } from "@/service/notificationService";
+import { API_MARKETING } from "@/service/constant";
 
 const IssueTracker: React.FC = () => {
   const [data, setData] = useState<Room[]>([]);
@@ -98,7 +99,7 @@ const IssueTracker: React.FC = () => {
   const fetchRoomData = async (page: number = 1) => {
     try {
       const response = await axios.get(
-        `http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080/marketing/post/all`,
+        `${API_MARKETING}/post/all`,
         { params: { page, size } }
       );
       const responseData = response.data;

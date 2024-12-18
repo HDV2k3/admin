@@ -14,6 +14,13 @@ const nextConfig = {
       'images.unsplash.com'
     ],
   },
+  env: {
+    NEXT_PUBLIC_API_URL_SOCKET: process.env.NEXT_PUBLIC_API_URL_SOCKET,
+    NEXT_PUBLIC_API_URL_CHATTING: process.env.NEXT_PUBLIC_API_URL_CHATTING,
+    NEXT_PUBLIC_API_URL_MARKETING: process.env.NEXT_PUBLIC_API_URL_MARKETING,
+    NEXT_PUBLIC_API_URL_USER: process.env.NEXT_PUBLIC_API_URL_USER,
+    NEXT_PUBLIC_API_URL_CHAT_BOT: process.env.NEXT_PUBLIC_API_URL_CHAT_BOT,
+  },
 };
 
 export default nextConfig;

@@ -1,9 +1,6 @@
 "use client";
 import { Layout, Menu } from "antd";
 import {
-  PieChartOutlined,
-  BarChartOutlined,
-  SettingOutlined,
   DashboardOutlined,
   MessageOutlined,
   HomeOutlined,
@@ -19,26 +16,13 @@ const DashboardSidebar: React.FC = () => {
       icon: <DashboardOutlined />,
       label: <Link href="/">Dash Board</Link>,
     },
-    {
-      key: "2",
-      icon: <PieChartOutlined />,
-      label: <Link href="/analytics">Analytics</Link>,
-    },
+
     {
       key: "3",
       icon: <MessageOutlined />,
       label: <Link href="/support">Support</Link>,
     },
-    {
-      key: "4",
-      icon: <BarChartOutlined />,
-      label: <Link href="/reports">Reports</Link>,
-    },
-    {
-      key: "5",
-      icon: <SettingOutlined />,
-      label: <Link href="/settingAdmin">Settings</Link>,
-    },
+
     {
       key: "6",
       icon: <HomeOutlined />,

@@ -1,5 +1,4 @@
 "use client";
-import { API_IDENTITY } from "@/service/constant";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -19,10 +18,13 @@ const LoginPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_IDENTITY}/auth/login`, {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL_USER}/auth/login`,
+        {
+          email,
+          password,
+        }
+      );
 
       if (response.data && response.data.data.token) {
         localStorage.setItem("token", response.data.data.token); // Save token in localStorage

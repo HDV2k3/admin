@@ -9,10 +9,10 @@ import {
   ConfigProvider,
   DatePicker,
 } from "antd";
-import RoomImageUpload from "../../../component/UploadImages";
-import RoomInfoForm from "../../../component/RoomInfoEdit";
-import PricingDetailsForm from "../../../component/PricingDetails";
-import RoomUtilityForm from "../../../component/RoomUtilities";
+import RoomImageUpload from "../../../component/edit_create/component/UploadImages";
+import RoomInfoForm from "../../../component/edit_create/component/RoomInfoEdit";
+import PricingDetailsForm from "../../../component/edit_create/component/PricingDetails";
+import RoomUtilityForm from "../../../component/edit_create/component/RoomUtilities";
 
 import dayjs from "dayjs";
 
@@ -149,94 +149,100 @@ const RoomForm: React.FC<RoomFormProps> = ({ roomData, onSubmit }) => {
     console.log("onChange:", dateStr);
   };
   return (
-    <Form
-      form={form}
-      layout="vertical"
-      onFinish={handleFinish}
-      initialValues={{
-        ...roomData,
-        amenitiesAvailability: amenities,
-        furnitureAvailability: furnitures,
-        roomInfo: {
-          ...roomData?.roomInfo,
-          availableFromDate: roomData?.roomInfo?.availableFromDate
-            ? dayjs(roomData.roomInfo.availableFromDate)
-            : null,
-        },
-      }}
-    >
-      {/* Title */}
-      <Form.Item label="Title" name="title">
-        <Input placeholder={roomData?.title || "Enter room title"} />
-      </Form.Item>
+    <div className="p-6 bg-gray-50 max-w-7xl mx-auto shadow-lg rounded-lg">
+      <h1 className="text-3xl font-bold text-center text-blue-600 mb-8">
+        Chỉnh sửa phòng [{roomData?.roomInfo.name}]
+      </h1>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleFinish}
+        initialValues={{
+          ...roomData,
+          amenitiesAvailability: amenities,
+          furnitureAvailability: furnitures,
+          roomInfo: {
+            ...roomData?.roomInfo,
+            availableFromDate: roomData?.roomInfo?.availableFromDate
+              ? dayjs(roomData.roomInfo.availableFromDate)
+              : null,
+          },
+        }}
+      >
+        {/* Title */}
+        <Form.Item label="Tiêu đề" name="title">
+          <Input placeholder={roomData?.title || "Enter room title"} />
+        </Form.Item>
 
-      {/* Description */}
-      <Form.Item label="Description" name="description">
-        <Input.TextArea
-          placeholder={roomData?.description || "Enter room description"}
-        />
-      </Form.Item>
-
-      {/* Room Info */}
-      <RoomInfoForm />
-
-      {/* Room Utility */}
-      <RoomUtilityForm />
-
-      {/* Pricing Details */}
-      <PricingDetailsForm />
-
-      {/* Contact Info */}
-      <Form.Item label="Contact Info" name="contactInfo">
-        <Input
-          placeholder={
-            roomData?.contactInfo || "Enter contact info (e.g., phone number)"
-          }
-        />
-      </Form.Item>
-
-      {/* Additional Details */}
-      <Form.Item label="Additional Details" name="additionalDetails">
-        <Input.TextArea
-          placeholder={roomData?.additionalDetails || "Enter any details"}
-        />
-      </Form.Item>
-
-      {/* Room Images */}
-      <Form.Item>
-        <RoomImageUpload
-          postId={roomData?.id || ""}
-          initialImages={roomData?.roomInfo?.postImages}
-          onChange={handleImagesChange}
-        />
-      </Form.Item>
-
-      {/* availableFromDate*/}
-      <ConfigProvider locale={globalBuddhistLocale}>
-        <Form.Item
-          label="Available From Date"
-          name={["roomInfo", "availableFromDate"]}
-        >
-          <DatePicker
-            placeholder={"Select available from date"}
-            style={{ width: "100%" }}
-            locale={buddhistLocale}
-            onChange={handleDateChange}
+        {/* Description */}
+        <Form.Item label="Mô tả" name="description">
+          <Input.TextArea
+            placeholder={roomData?.description || "Enter room description"}
           />
         </Form.Item>
-      </ConfigProvider>
-      {/* Availability Switch */}
-      <Form.Item label="Available" valuePropName="checked" name="status">
-        <Switch />
-      </Form.Item>
 
-      {/* Submit Button */}
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Save Changes
-        </Button>
-      </Form.Item>
-    </Form>
+        {/* Room Info */}
+        <RoomInfoForm />
+
+        {/* Room Utility */}
+        <RoomUtilityForm />
+
+        {/* Pricing Details */}
+        <PricingDetailsForm />
+
+        {/* Contact Info */}
+        <Form.Item label="Thông tin liên lạc" name="contactInfo">
+          <Input
+            placeholder={
+              roomData?.contactInfo ||
+              "Nhập thông tin liên lạc (ví dụ: số điện thoại)"
+            }
+          />
+        </Form.Item>
+
+        {/* Additional Details */}
+        <Form.Item label="Chi tiết bổ sung" name="additionalDetails">
+          <Input.TextArea
+            placeholder={roomData?.additionalDetails || "Enter any details"}
+          />
+        </Form.Item>
+
+        {/* Room Images */}
+        <Form.Item>
+          <RoomImageUpload
+            postId={roomData?.id || ""}
+            initialImages={roomData?.roomInfo?.postImages}
+            onChange={handleImagesChange}
+          />
+        </Form.Item>
+
+        {/* availableFromDate*/}
+        <ConfigProvider locale={globalBuddhistLocale}>
+          <Form.Item
+            label="Available From Date"
+            name={["roomInfo", "availableFromDate"]}
+          >
+            <DatePicker
+              placeholder={"Select available from date"}
+              style={{ width: "100%" }}
+              locale={buddhistLocale}
+              onChange={handleDateChange}
+            />
+          </Form.Item>
+        </ConfigProvider>
+        {/* Availability Switch */}
+        <Form.Item label="Available" valuePropName="checked" name="status">
+          <Switch />
+        </Form.Item>
+
+        {/* Submit Button */}
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Save Changes
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 

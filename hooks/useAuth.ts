@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter, usePathname } from "next/navigation";
-import { API_IDENTITY } from "@/service/constant";
+
 
 interface UserData {
   data: {
@@ -34,7 +34,7 @@ export function useAuth() {
 
         // Kiểm tra vai trò người dùng
         const response = await axios.get<UserData>(
-          `${API_IDENTITY}/users/me`,
+          `${process.env.NEXT_PUBLIC_API_URL_USER}/users/me`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

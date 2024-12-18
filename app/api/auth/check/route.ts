@@ -1,7 +1,6 @@
 // app/api/auth/check/route.ts
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { API_IDENTITY } from "@/service/constant";
 
 export async function GET() {
   try {
@@ -16,7 +15,7 @@ export async function GET() {
     }
 
     const response = await fetch(
-      `${API_IDENTITY}/users/me`,
+      `${process.env.NEXT_PUBLIC_API_URL_USER}/users/me`,
       {
         headers: {
           Authorization: `Bearer ${token.value}`,

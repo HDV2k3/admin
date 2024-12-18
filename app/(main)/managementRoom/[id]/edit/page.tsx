@@ -5,7 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { Spin, notification } from "antd";
 import RoomForm from "./component/EditRoomPage";
-import { API_MARKETING } from "@/service/constant";
 
 const EditRoomPage = () => {
   const { id } = useParams();
@@ -18,7 +17,7 @@ const EditRoomPage = () => {
     const fetchRoomData = async () => {
       try {
         const response = await axios.get(
-          `${API_MARKETING}/post/post-by-id/${id}`
+          `${process.env.NEXT_PUBLIC_API_URL_MARKETING}/post/post-by-id/${id}`
         );
         setRoomData(response.data.data);
         setLoading(false);
@@ -36,7 +35,7 @@ const EditRoomPage = () => {
   const handleSubmit = async (updatedRoomData: RoomFinal) => {
     try {
       const response = await axios.put(
-        `${API_MARKETING}/post/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL_MARKETING}/post/${id}`,
         updatedRoomData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -62,7 +61,6 @@ const EditRoomPage = () => {
 
   return (
     <div className="p-6">
-      <h1>Edit Room</h1>
       <RoomForm roomData={roomData} onSubmit={handleSubmit} />
     </div>
   );

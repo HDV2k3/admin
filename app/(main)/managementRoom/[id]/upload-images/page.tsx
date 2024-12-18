@@ -5,8 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { notification, UploadFile } from "antd";
 import axios from "axios";
-import RoomImageUpload from "../../component/UploadImages";
-import { API_MARKETING } from "@/service/constant";
+import RoomImageUpload from "../../component/edit_create/component/UploadImages";
 
 const UploadImagesPage: React.FC = () => {
   const { id: roomId } = useParams();
@@ -19,7 +18,7 @@ const UploadImagesPage: React.FC = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `${API_MARKETING}/post/${roomId}/images`,
+          `${process.env.NEXT_PUBLIC_API_URL_MARKETING}/post/${roomId}/images`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

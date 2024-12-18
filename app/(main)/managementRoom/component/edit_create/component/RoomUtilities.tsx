@@ -42,7 +42,7 @@ const RoomUtilityForm: React.FC<RoomUtilityFormProps> = ({}) => {
                   valuePropName="checked"
                   noStyle
                 >
-                  <Checkbox>Available</Checkbox>
+                  <Checkbox>có sẵn</Checkbox>
                 </Form.Item>
                 <CloseOutlined
                   onClick={() => {
@@ -52,7 +52,7 @@ const RoomUtilityForm: React.FC<RoomUtilityFormProps> = ({}) => {
               </Space>
             ))}
             <Button type="dashed" onClick={() => subOpt.add()} block>
-              + Add Furniture
+              + Thêm nội thất
             </Button>
           </div>
         )}
@@ -82,7 +82,7 @@ const RoomUtilityForm: React.FC<RoomUtilityFormProps> = ({}) => {
                   valuePropName="checked"
                   noStyle
                 >
-                  <Checkbox>Available</Checkbox>
+                  <Checkbox>có sẵn</Checkbox>
                 </Form.Item>
                 <CloseOutlined
                   onClick={() => {
@@ -92,7 +92,7 @@ const RoomUtilityForm: React.FC<RoomUtilityFormProps> = ({}) => {
               </Space>
             ))}
             <Button type="dashed" onClick={() => subOpt.add()} block>
-              + Add Amenity
+              + Thêm tiện nghi
             </Button>
           </div>
         )}

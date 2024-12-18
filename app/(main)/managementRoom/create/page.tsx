@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { notification } from "antd";
 import axios from "axios";
 import NewRoomForm from "./component/NewsRoomPage";
-import { API_MARKETING } from "@/service/constant";
 
 const NewRoomPage: React.FC = () => {
   const router = useRouter();
@@ -16,7 +15,7 @@ const NewRoomPage: React.FC = () => {
     try {
       // Submit the new room details (without images)
       const response = await axios.post(
-        `${API_MARKETING}/post/create`, // Replace with your API endpoint
+        `${process.env.NEXT_PUBLIC_API_URL_MARKETING}/post/create`, // Replace with your API endpoint
         roomData,
         {
           headers: {
@@ -46,7 +45,6 @@ const NewRoomPage: React.FC = () => {
 
   return (
     <div className="p-6">
-      <h1>Create New Room</h1>
       <NewRoomForm onSubmit={handleSubmit} />
     </div>
   );

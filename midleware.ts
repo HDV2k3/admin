@@ -2,7 +2,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import axios from "axios";
-import { API_IDENTITY } from "./service/constant";
 
 // Define protected routes with role requirements
 const protectedRoutes = {
@@ -41,11 +40,14 @@ export async function middleware(request: NextRequest) {
 
   // Verify token and check roles
   try {
-    const response = await axios.get(`${API_IDENTITY}/users/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL_USER}/users/me`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     const userData = response.data;
     const userRoles = userData?.data?.roles || [];

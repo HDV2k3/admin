@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const BASE_URL =
-  "http://ec2-54-206-187-225.ap-southeast-2.compute.amazonaws.com:8080";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL_MARKETING;
 
 export const api = axios.create({
   baseURL: BASE_URL,

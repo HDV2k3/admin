@@ -1,205 +1,80 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import axios from "axios";
-import { Spin, Card, Col, Row, Tag, Button, Divider } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
-import Image from "next/image";
-import { API_MARKETING } from "@/service/constant";
+import "antd/dist/reset.css";
+import { useParams, useSearchParams } from "next/navigation";
+import "../component/detail/component/style/info-detail-wrapper.css";
+import { useRoomDetail } from "@/hooks/useRoomDetail";
 
-const RoomDetailPage = () => {
-  const [roomData, setRoomData] = useState<RoomFinal | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const router = useRouter();
-  const { id: PostId } = useParams() as { id: string };
+import SquareAndRectanglesImageDetail from "../component/detail/component/ImageDetail/SquareAndRectanglesImageDetail";
+import InfoDetail from "../component/detail/component/InfoDetail/InfoDetail";
+import { useRoomPromotionalDetail } from "@/hooks/useRoomPromotionalDetail";
+// Loading and Error States
+function Loading() {
+  return <div className="text-center py-10">Loading...</div>;
+}
 
-  // Fetch room data by ID
-  useEffect(() => {
-    if (!PostId) return;
+function ErrorMessage({ message }: { readonly message: string }) {
+  return <div className="text-center py-10">{message}</div>;
+}
 
-    const fetchRoomDetails = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(
-          `${API_MARKETING}/post/post-by-id/${PostId}`
-        );
-        if (response.data.responseCode === 101000) {
-          setRoomData(response.data.data);
-        } else {
-          console.error("Failed to fetch room data.");
-        }
-      } catch (error) {
-        console.error("Error fetching room data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRoomDetails();
-  }, [PostId]);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spin size="large" />
-      </div>
-    );
-  }
-
-  if (!roomData) {
-    return <div className="text-center py-12">Room not found</div>;
-  }
-
+// Room Detail Content Component
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function RoomDetailContent({ roomData }: { readonly roomData: any }) {
   return (
-    <div className="p-6">
-      <Button
-        type="primary"
-        icon={<ArrowLeftOutlined />}
-        onClick={() => router.push("/")}
-        className="mb-6"
-      >
-        Back to Rooms List
-      </Button>
+    <div className="container mx-auto px-4 md:px-6 lg:px-8">
+      <div className="flex flex-col md:flex-row md:gap-6 lg:gap-8">
+        {/* Image Section */}
+        <div className="w-full md:w-1/2 lg:w-2/3 mb-2">
+          <SquareAndRectanglesImageDetail room={roomData} />
+        </div>
 
-      <Card title={roomData.title} bordered={false} className="shadow-lg">
-        <Row gutter={24}>
-          <Col span={16}>
-            {/* Room Images */}
-            <div className="mb-8">
-              <h3 className="text-2xl font-semibold mb-4">Room Images</h3>
-              <div className="grid grid-cols-2 gap-4">
-                {roomData.roomInfo.postImages?.map((image, index) => (
-                  <Image
-                    key={index}
-                    src={image.urlImagePost}
-                    alt={roomData.title}
-                    width={400}
-                    height={300}
-                    objectFit="cover"
-                    className="rounded-lg shadow-md"
-                  />
-                ))}
-              </div>
-            </div>
+        {/* Info Section */}
+        <div className="w-full md:w-1/2 lg:w-1/3 mb-6 info-detail-wrapper">
+          <InfoDetail room={roomData} />
+        </div>
+      </div>
 
-            {/* Room Description */}
-            <h3 className="text-2xl font-semibold mt-6">Description</h3>
-            <p className="text-gray-700 leading-relaxed">
-              {roomData.description}
-            </p>
-
-            {/* Room Info */}
-            <h3 className="text-2xl font-semibold mt-6">Room Information</h3>
-            <ul className="space-y-2 text-gray-700">
-              <li>
-                <strong>Name:</strong> {roomData.roomInfo.name}
-              </li>
-              <li>
-                <strong>Type:</strong> {roomData.roomInfo.type}
-              </li>
-              <li>
-                <strong>Style:</strong> {roomData.roomInfo.style}
-              </li>
-              <li>
-                <strong>Address:</strong> {roomData.roomInfo.address}
-              </li>
-              <li>
-                <strong>Floor:</strong> {roomData.roomInfo.floor}
-              </li>
-              <li>
-                <strong>Total Area:</strong> {roomData.roomInfo.totalArea} m²
-              </li>
-              <li>
-                <strong>Capacity:</strong> {roomData.roomInfo.capacity} people
-              </li>
-              <li>
-                <strong>Bedrooms:</strong> {roomData.roomInfo.numberOfBedrooms}
-              </li>
-              <li>
-                <strong>Bathrooms:</strong>{" "}
-                {roomData.roomInfo.numberOfBathrooms}
-              </li>
-            </ul>
-
-            <Divider />
-
-            {/* Room Utilities */}
-            <h3 className="text-2xl font-semibold mt-6">Utilities</h3>
-            <ul className="space-y-2 text-gray-700">
-              {Object.entries(roomData.roomUtility.furnitureAvailability).map(
-                ([key, value]) => (
-                  <li key={key}>
-                    <strong>
-                      {key.charAt(0).toUpperCase() + key.slice(1)}:
-                    </strong>{" "}
-                    {value ? "Available" : "Not Available"}
-                  </li>
-                )
-              )}
-              {Object.entries(roomData.roomUtility.amenitiesAvailability).map(
-                ([key, value]) => (
-                  <li key={key}>
-                    <strong>
-                      {key.charAt(0).toUpperCase() + key.slice(1)}:
-                    </strong>{" "}
-                    {value ? "Available" : "Not Available"}
-                  </li>
-                )
-              )}
-            </ul>
-
-            <Divider />
-
-            {/* Pricing Details */}
-            <h3 className="text-2xl font-semibold mt-6">Pricing Details</h3>
-            <ul className="space-y-2 text-gray-700">
-              <li>
-                <strong>Base Price:</strong> $
-                {roomData.pricingDetails.basePrice}
-              </li>
-              <li>
-                <strong>Electricity Cost:</strong> $
-                {roomData.pricingDetails.electricityCost}
-              </li>
-              <li>
-                <strong>Water Cost:</strong> $
-                {roomData.pricingDetails.waterCost}
-              </li>
-              {roomData.pricingDetails.additionalFees.map((fee, index) => (
-                <li key={index}>
-                  <strong>{fee.type}:</strong> ${fee.amount}
-                </li>
-              ))}
-            </ul>
-
-            <Divider />
-
-            {/* Additional Details */}
-            <h3 className="text-2xl font-semibold mt-6">Additional Details</h3>
-            <p className="text-gray-700">{roomData.additionalDetails}</p>
-
-            <Divider />
-
-            {/* Contact Info */}
-            <h3 className="text-2xl font-semibold mt-6">Contact Info</h3>
-            <p className="text-gray-700">{roomData.contactInfo}</p>
-          </Col>
-          <Col span={8}>
-            {/* Status */}
-            <div className="mb-6">
-              <Tag color={roomData.status === "active" ? "green" : "red"}>
-                {roomData.status}
-              </Tag>
-            </div>
-            {/* Contact Section */}
-            <Button type="primary" block size="large" className="mt-6">
-              Contact Owner
-            </Button>
-          </Col>
-        </Row>
-      </Card>
+     
     </div>
   );
-};
+}
 
-export default RoomDetailPage;
+// Detail Fetching Components
+function RegularRoomDetail({ id }: { readonly id: string }) {
+  const { roomData, isLoading, isError } = useRoomDetail(id);
+
+  if (isLoading) return <Loading />;
+  if (isError) return <ErrorMessage message="Error loading room details" />;
+  if (!roomData) return <ErrorMessage message="Room details not available" />;
+
+  return <RoomDetailContent roomData={roomData} />;
+}
+
+function PromotionalRoomDetail({ id }: { readonly id: string }) {
+  const { roomData, isLoading, isError } = useRoomPromotionalDetail(id);
+
+  if (isLoading) return <Loading />;
+  if (isError)
+    return <ErrorMessage message="Error loading promotional room details" />;
+  if (!roomData)
+    return <ErrorMessage message="Promotional room details not available" />;
+
+  return <RoomDetailContent roomData={roomData} />;
+}
+
+// Main Component
+function RoomDetail() {
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const id = params?.id as string | undefined;
+  const roomType = searchParams?.get("type");
+
+  if (!id) return <ErrorMessage message="Invalid room ID" />;
+
+  return roomType === "promotional" ? (
+    <PromotionalRoomDetail id={id} />
+  ) : (
+    <RegularRoomDetail id={id} />
+  );
+}
+
+export default RoomDetail;

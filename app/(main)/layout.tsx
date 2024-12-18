@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import DashboardSidebar from "@/component/DashboardSidebar";
 import DashboardHeader from "@/component/DashboardHeader";
-import { API_IDENTITY } from "@/service/constant";
+
 
 export const metadata = {
   title: "NextRoom",
@@ -24,7 +24,7 @@ async function getUser() {
 
   try {
     const response = await fetch(
-      `${API_IDENTITY}/users/me`,
+      `${process.env.NEXT_PUBLIC_API_URL_USER}/users/me`,
       {
         headers: {
           Authorization: `Bearer ${token.value}`,

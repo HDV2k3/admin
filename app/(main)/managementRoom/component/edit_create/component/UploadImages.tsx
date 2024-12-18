@@ -4,7 +4,6 @@ import { Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import type { UploadFile, UploadProps, RcFile } from "antd/es/upload/interface";
 import axios from "axios";
-import { API_MARKETING } from "@/service/constant";
 
 interface RoomImageUploadProps {
   postId: string;
@@ -88,7 +87,7 @@ const RoomImageUpload: React.FC<RoomImageUploadProps> = ({
       const token = localStorage.getItem("token");
       console.log(formData);
       const response = await axios.post(
-        `${API_MARKETING}/post/upload-images`,
+        `${process.env.NEXT_PUBLIC_API_URL_MARKETING}/post/upload-images`,
         formData,
         {
           headers: {
